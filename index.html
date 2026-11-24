@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OrbitPay — Cross-Border Liquidity Mesh &amp; AML Engine</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip-link" href="#mainContent">Skip to main settlement console</a>
+<div class="app" id="appRoot">
+  <header class="top">
+    <div class="brand">
+      <button type="button" class="orb-btn" id="orbTrigger" title="Compliance &amp; Treasury Ops Console (Alt+Shift+O)" aria-label="Open Compliance and Treasury Ops Console" aria-expanded="false" aria-controls="stealthPanel"></button>
+      <h1>OrbitPay</h1>
+      <span class="subtitle">Durable Multi-Tenant Liquidity Mesh &amp; AML Engine</span>
+    </div>
+    <div class="pills">
+      <div class="pill" id="capPill">Tenant Vol: &#8377;0 / &#8377;5L</div>
+      <div class="pill" id="latencyPill">Last Latency: Ready</div>
+      <div class="pill" id="ratePill">FX: Server Locked</div>
+    </div>
+  </header>
+
+  <main class="grid" id="mainContent">
+    <section class="card" aria-labelledby="sec1Heading">
+      <h2 id="sec1Heading">1. Multi-Tenant Cross-Border Settlement</h2>
+
+      <div class="row">
+        <div>
+          <label for="kyc">
+            <span>Verified KYC Tenant (Select preset or type custom name)</span>
+            <span class="lock-tag" id="kycHint">Dynamic Tenant-Scoped</span>
+          </label>
+          <input id="kyc" list="kycPresets" value="Ravindra Prajapat" maxlength="120" autocomplete="off" aria-describedby="kycHint">
+          <datalist id="kycPresets">
+            <option value="Ravindra Prajapat">KYC-01 (ABCPP8821F)</option>
+            <option value="Ananya Sharma">KYC-02 (XYZPS4419K)</option>
+            <option value="Vikram Rathore">KYC-03 (LMNPR9021D)</option>
+          </datalist>
+        </div>
+        <div>
+          <label for="dep">Source Bank Account Name</label>
+          <input id="dep" value="Ravindra Prajapat" maxlength="120">
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label for="amt"><span>Send Amount</span> <span class="lock-tag">Per-Tenant Cap &#8377;5L</span></label>
+          <input id="amt" type="number" min="0.01" step="any" value="50" aria-describedby="amtErr">
+          <div class="field-err" id="amtErr" role="alert" aria-live="assertive"></div>
+        </div>
+        <div>
+          <label for="corridor">Corridor</label>
+          <select id="corridor">
+            <option value="EUR_INR">EUR -&gt; INR (EU to India Pool)</option>
+            <option value="INR_EUR">INR -&gt; EUR (India to EU Pool)</option>
+            <option value="USD_INR">USD -&gt; INR (US to India Pool)</option>
+            <option value="INR_USD">INR -&gt; USD (India to US Pool)</option>
+            <option value="GBP_INR">GBP -&gt; INR (UK to India Pool)</option>
+            <option value="INR_GBP">INR -&gt; GBP (India to UK Pool)</option>
+            <option value="USD_EUR">USD -&gt; EUR (US to EU Pool)</option>
+            <option value="EUR_USD">EUR -&gt; USD (EU to US Pool)</option>
+            <option value="GBP_USD">GBP -&gt; USD (UK to US Pool)</option>
+            <option value="USD_GBP">USD -&gt; GBP (US to UK Pool)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label for="rec">Recipient (Destination Pool)</label>
+          <input id="rec" value="Ravi Sharma (INR Local Pool)" maxlength="120">
+        </div>
+        <div>
+          <label for="purpose">Purpose Code</label>
+          <select id="purpose">
+            <option value="Family Support">Family Support</option>
+            <option value="Freelance / Tech Export">Freelance / Tech Export</option>
+            <option value="Education / Tuition">Education / Tuition</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="doc-box" role="group" aria-labelledby="docBoxTitle">
+        <div class="doc-title" id="docBoxTitle">Pre-Payment Document Forensics &amp; Anti-Laundering Check</div>
+        <div class="row">
+          <div>
+            <label for="docType" class="no-top">Document Type</label>
+            <select id="docType">
+              <option value="PAN Card">PAN Card (e-KYC)</option>
+              <option value="Passport">Passport</option>
+              <option value="Invoice / Fee Slip">Invoice / Tuition Slip</option>
+            </select>
+          </div>
+          <div>
+            <label for="docNum" class="no-top">Document ID Number</label>
+            <input id="docNum" type="text" maxlength="32" placeholder="e.g. ABCPP8821F" value="ABCPP8821F">
+          </div>
+        </div>
+        <div class="mt-8">
+          <label for="docFile" class="no-top"><span>Upload Proof Document (PDF / JPG / PNG, &ge;4KB)</span> <span class="lock-tag" id="docReqTag">Optional (Cumulative &le; &#8377;2L)</span></label>
+          <input id="docFile" type="file" accept=".pdf,.png,.jpg,.jpeg">
+        </div>
+      </div>
+
+      <div class="row mt-6">
+        <div>
+          <label id="rateLabel" for="rateInput"><span id="ratePairText">EUR to INR Rate</span> <span class="lock-tag">Server Circuit-Locked</span></label>
+          <input id="rateInput" type="text" value="102.523" readonly aria-readonly="true">
+        </div>
+        <div class="btn-group-end">
+          <button class="ghost" id="refreshRateBtn" type="button">Refresh Live Rate</button>
+          <button class="ghost" id="resetDemoBtn" type="button">Reset Ledger</button>
+        </div>
+      </div>
+
+      <div class="cmp" aria-label="Fee and settlement comparison">
+        <div class="ln"><span>Active Exchange Rate:</span><strong id="rateLine">1 EUR = 102.523 INR</strong></div>
+        <div class="ln"><span>Traditional SWIFT + FX Spread (~6.5% + fee):</span><span class="strike" id="swiftLine">15.25 EUR (3-5 Days)</span></div>
+        <div class="ln"><span id="feeLabel">OrbitPay Mesh Fee (0.4% base):</span><span class="sky-text" id="feeLine">0.20 EUR</span></div>
+        <div class="ln"><span>Recipient Receives:</span><span class="big-ok" id="payoutLine">&#8377;5,105.65 INR</span></div>
+      </div>
+
+      <button class="btn primary" id="settleBtn" type="button">Verify Document, OTP &amp; Settle</button>
+      <button class="btn aml" id="amlTestBtn" type="button">Test AML Block (Mismatched Sender Name)</button>
+      <button class="btn bank-btn hidden" id="bankApproveBtn" type="button">Compliance Officer Unlock (Current Tenant)</button>
+      <div class="muted mt-8" id="diag" role="status" aria-live="polite">Server circuit-breaker FX quote active.</div>
+    </section>
+
+    <section class="card" aria-labelledby="sec2Heading">
+      <h2 id="sec2Heading">2. Parallel 4-Step AML &amp; Treasury Engine</h2>
+
+      <div class="step" id="st1">
+        <div class="step-hd"><span>1. KYC + Server Binary Forensics + AML</span><span id="s1" class="wait">Ready</span></div>
+        <div class="muted">Per-tenant PAN match, bidirectional round-trip/fan-in smurfing guard, Shannon entropy &amp; SHA-256 deduplication.</div>
+      </div>
+
+      <div class="step" id="st2">
+        <div class="step-hd"><span>2. Tenant-Scoped Step-Up OTP (60s | 3 Fails Lock)</span><span id="s2" class="wait">0/3 Failed</span></div>
+        <div class="muted">Mandatory txId-bound challenge. 3 wrong OTPs freeze only the active KYC tenant without impacting other users.</div>
+      </div>
+
+      <div class="step" id="st3">
+        <div class="step-hd"><span>3. Durable Append-Only JSONL Hash Ledger</span><span id="s3" class="wait">Ready</span></div>
+        <div class="muted">Persists full 256-bit SHA-256 hash-chained blocks over all settlement fields across restarts.</div>
+      </div>
+
+      <div class="step" id="st4">
+        <div class="step-hd"><span>4. Liquidity Pool &amp; Treasury Rebalance Guard</span><span id="s4" class="wait">Ready</span></div>
+        <div class="muted">Monitors directional drain (&lt;20% reserve), applies +0.65% spread, and supports Ops top-up.</div>
+      </div>
+
+      <div class="pools" aria-label="Regional liquidity pool balances">
+        <div class="pool" id="poolCard_USD"><strong>US Pool (USD)</strong><br><span id="usPool">$254,500.00</span></div>
+        <div class="pool" id="poolCard_INR"><strong>India Pool (INR)</strong><br><span id="inPool">&#8377;2,06,80,975.35</span></div>
+        <div class="pool" id="poolCard_EUR"><strong>EU Pool (EUR)</strong><br><span id="euPool">&euro;180,000.00</span></div>
+        <div class="pool" id="poolCard_GBP"><strong>UK Pool (GBP)</strong><br><span id="ukPool">&pound;140,000.00</span></div>
+      </div>
+
+      <div class="status-box" id="outBox" role="status" aria-live="polite">
+        <span class="ok">READY:</span> Switch or type any KYC tenant; state and 256-bit hash-chained JSONL ledger persist on server disk.
+      </div>
+    </section>
+  </main>
+
+  <section class="card log-card" aria-labelledby="sec3Heading">
+    <h2 id="sec3Heading">3. Tenant-Scoped Hash-Chained Audit Ledger</h2>
+    <ul id="logList" class="ledger-list muted">
+      <li>Loading tenant ledger...</li>
+    </ul>
+  </section>
+
+  <footer class="footer-bar">
+    <span class="muted">Architecture: Multi-tenant Node.js server with append-only JSONL hash-chained persistence, server binary forensics &amp; Treasury Rebalance API.</span>
+  </footer>
+
+  <section class="stealth-panel" id="stealthPanel" tabindex="-1" aria-labelledby="stealthHeading">
+    <div class="panel-hd">
+      <h2 id="stealthHeading" class="panel-title">Compliance &amp; Treasury Ops Console</h2>
+      <button class="ghost no-flex" id="hideConsoleBtn" type="button">Hide Console</button>
+    </div>
+
+    <div class="rebalance-box">
+      <div class="doc-title mb-4">Treasury Pool Liquidity Top-Up / Rebalance Engine</div>
+      <div class="muted mb-8">Inject Nostro liquidity into drained regional pools (&lt;20% reserve) and record a 256-bit SHA-256 ledger block.</div>
+      <div class="row3">
+        <div>
+          <label for="rebCur" class="no-top">Target Pool</label>
+          <select id="rebCur">
+            <option value="INR">India Pool (INR)</option>
+            <option value="USD">US Pool (USD)</option>
+            <option value="EUR">EU Pool (EUR)</option>
+            <option value="GBP">UK Pool (GBP)</option>
+          </select>
+        </div>
+        <div>
+          <label for="rebAmt" class="no-top">Top-Up Amount</label>
+          <input id="rebAmt" type="number" min="1" value="5000000">
+        </div>
+        <div class="btn-group-end">
+          <button class="btn primary no-top pad-10" id="rebalanceBtn" type="button">Inject Liquidity</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="muted mb-8">Privileged AML telemetry, active OTP challenges, dynamic unlock tokens, and treasury rebalance events (Shortcut: Alt+Shift+O).</div>
+    <ul id="stealthLogs" class="ledger-list muted">
+      <li>No risk or treasury events captured yet.</li>
+    </ul>
+  </section>
+</div>
+
+<!-- OTP Modal (no backdrop-click close so accidental clicks don't discard active 2FA) -->
+<div class="modal-bg" id="bioModal" role="dialog" aria-modal="true" aria-labelledby="bioModalTitle" aria-describedby="bioModalDesc">
+  <div class="modal">
+    <h2 id="bioModalTitle" class="mb-6">Step-Up 6-Digit OTP Verification</h2>
+    <div class="muted" id="bioModalDesc">txId-bound tenant challenge. Open Ops Console with your server runtime PIN to inspect active challenge OTP.</div>
+    <div class="otp-row">
+      <span>Challenge: <span class="code-tag" id="liveCode">Check Ops Console</span></span>
+      <span class="muted" id="otpTimer">Expires in 60s</span>
+    </div>
+    <div class="mt-6">
+      <button class="ghost full-width" id="modalInspectOpsBtn" type="button">Inspect OTP in Ops Console</button>
+    </div>
+    <label for="liveInput">Enter 6-Digit OTP &amp; Press Enter</label>
+    <input id="liveInput" type="text" maxlength="6" inputmode="numeric" autocomplete="off" aria-describedby="modalErr">
+    <div class="modal-err" id="modalErr" role="alert" aria-live="assertive"></div>
+    <div class="row mt-10">
+      <button class="btn primary no-top" id="verifyOtpBtn" type="button">Verify &amp; Settle</button>
+      <button class="ghost" id="cancelOtpBtn" type="button">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Compliance Officer Unlock Modal -->
+<div class="modal-bg" id="bankModal" role="dialog" aria-modal="true" aria-labelledby="bankModalTitle" aria-describedby="bankModalDesc">
+  <div class="modal">
+    <h2 id="bankModalTitle" class="mb-6">Compliance Officer Unlock</h2>
+    <div class="muted" id="bankModalDesc">Enter the dynamic single-use Unlock Token from the authenticated Ops Console.</div>
+    <label for="bankPinInput">Dynamic Single-Use Token</label>
+    <input id="bankPinInput" type="text" maxlength="16" autocomplete="off" placeholder="Enter 6-char dynamic token" aria-describedby="bankErr">
+    <div class="modal-err" id="bankErr" role="alert" aria-live="assertive"></div>
+    <div class="row mt-10">
+      <button class="btn primary no-top" id="authUnlockBtn" type="button">Authorize Unlock</button>
+      <button class="ghost" id="cancelBankBtn" type="button">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Ops Console Auth Modal -->
+<div class="modal-bg" id="opsAuthModal" role="dialog" aria-modal="true" aria-labelledby="opsAuthTitle" aria-describedby="opsAuthDesc">
+  <div class="modal">
+    <h2 id="opsAuthTitle" class="mb-6">Compliance &amp; Treasury Ops Access</h2>
+    <div class="muted" id="opsAuthDesc">Enter Ops Console PIN printed in server startup logs (or ORBITPAY_OPS_PIN).</div>
+    <label for="opsPinInput">Ops Console PIN</label>
+    <input id="opsPinInput" type="password" maxlength="128" autocomplete="off" placeholder="Enter Ops PIN" aria-describedby="opsErr">
+    <div class="modal-err" id="opsErr" role="alert" aria-live="assertive"></div>
+    <div class="row mt-10">
+      <button class="btn primary no-top" id="openOpsBtn" type="button">Open Ops Console</button>
+      <button class="ghost" id="cancelOpsBtn" type="button">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script src="/compliance.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

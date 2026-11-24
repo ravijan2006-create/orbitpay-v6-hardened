@@ -1,0 +1,14 @@
+{
+  "name": "orbitpay-liquidity-mesh",
+  "version": "6.0.0",
+  "description": "Cross-Border Liquidity Mesh & Multi-Tenant AML Engine with Durable Hash-Chained JSONL Ledger",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test test.js api.test.js smoke.test.js",
+    "lint": "node --check compliance.js && node --check store.js && node --check server.js && node --check public/app.js && node --check test.js && node --check api.test.js && node --check smoke.test.js"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}
